@@ -1,0 +1,33 @@
+{
+  "name": "@kooboo/sync",
+  "version": "0.4.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "监听文件变化并进行 babel 转换",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1",
+  "dependencies": {
+    "@kooboo/compile": "workspace:*",
+    "@kooboo/core": "workspace:*",
+    "chokidar": "^4.0.3",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.5.0",
+    "glob": "^11.0.1",
+    "normalize-path": "^3.0.0",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.47",
+    "@types/normalize-path": "^3.0.2",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@kooboo/template-vitest",
+  "version": "0.5.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "kb sync"
+  },
+  "devDependencies": {
+    "@kooboo/vitest-plugin": "^0.0.2",
+    "@types/node": "^24.0.14",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

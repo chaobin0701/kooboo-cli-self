@@ -1,0 +1,22 @@
+{
+  "name": "@kooboo/core",
+  "version": "0.5.0",
+  "description": "Kooboo CLI 核心功能库",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsup"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "typescript": "^5.0.0"
+  }
+}

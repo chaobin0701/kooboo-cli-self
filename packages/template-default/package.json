@@ -1,0 +1,19 @@
+{
+  "name": "@kooboo/template-default",
+  "version": "0.3.2",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "dev:init": "node scripts/dev.js --init"
+  },
+  "dependencies": {
+    "@kooboo/sync": "workspace:^"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "typescript": "^5.3.3"
+  }
+}

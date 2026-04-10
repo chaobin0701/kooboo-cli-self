@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Load nvm if available
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+
+# Use absolute path for npx or fallback to system npx
+if [ -f "$HOME/.nvm/versions/node/v20.11.0/bin/npx" ]; then
+  "$HOME/.nvm/versions/node/v20.11.0/bin/npx" commitlint --edit
+elif command -v npx >/dev/null 2>&1; then
+  npx commitlint --edit
+else
+  echo "npx not found. Please ensure Node.js is installed and in PATH."
+  exit 1
+fi

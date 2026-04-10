@@ -1,0 +1,14 @@
+export default {
+  compilerOptions: {
+    target: 'ESNext',
+    module: 'ESNext',
+    moduleResolution: 'node',
+    baseUrl: '.',
+    strict: true,
+    esModuleInterop: true,
+    paths: {
+      'code/*': ['code/*']
+    },
+  },
+  include: ['./**/*', '../../../kooboo.d.ts']
+}

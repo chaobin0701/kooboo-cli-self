@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@/*": [
+                "../src/*"
+            ],
+        },
+        "types": [
+            "../kooboo.d.ts"
+        ]
+    }
+}
