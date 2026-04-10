@@ -16,6 +16,7 @@ export type CloneActionOptions = {
   dir?: string
   username?: string
   password?: string
+  includeAgentsMd?: boolean
 }
 
 export async function cloneAction(options: CloneActionOptions) {
@@ -49,6 +50,14 @@ export async function cloneAction(options: CloneActionOptions) {
       name: 'dir',
       message: 'Enter destination directory (defaults to site name if empty):',
       default: ''
+    })
+  }
+  if (typeof options.includeAgentsMd !== 'boolean') {
+    questions.push({
+      type: 'confirm',
+      name: 'includeAgentsMd',
+      message: 'Generate AGENTS.md for AI coding tools?',
+      default: true
     })
   }
   const answers = await inquirer.prompt(questions)
@@ -88,7 +97,8 @@ export async function cloneAction(options: CloneActionOptions) {
   await writeProjectScaffold({
     targetPath,
     siteName,
-    authConfig
+    authConfig,
+    includeAgentsMd: options.includeAgentsMd ?? answers.includeAgentsMd ?? false
   })
 
   async function cloneAllResource() {

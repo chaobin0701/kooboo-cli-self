@@ -9,6 +9,7 @@ import { glob } from 'glob'
 import { ModuleResourceType } from '@kooboo/core'
 import moduleTSConfig from '../dataTemplate/moduleTSConfig.js'
 import { envTemplateConfig, gitignore } from '../dataTemplate/constants.js'
+import { agentsTemplate } from '../dataTemplate/agents.js'
 
 const resourceTypeDirMap = {
   api: 'api',
@@ -38,11 +39,13 @@ const scaffoldDirs = ['api', 'code', 'layout', 'page', 'pagescript', 'view', 'js
 export async function writeProjectScaffold({
   targetPath,
   siteName,
-  authConfig
+  authConfig,
+  includeAgentsMd = false
 }: {
   targetPath: string
   siteName: string
   authConfig: AuthConfig
+  includeAgentsMd?: boolean
 }) {
   const createProjectSpinner = ora('Creating project...').start()
   fse.ensureDirSync(targetPath)
@@ -79,6 +82,10 @@ export async function writeProjectScaffold({
     KOOBOO_PASSWORD: authConfig.password
   }
   await writeDefaultEnvFiles(targetPath, env)
+
+  if (includeAgentsMd) {
+    fse.writeFileSync(path.join(targetPath, 'AGENTS.md'), agentsTemplate)
+  }
 
   fse.removeSync(path.join(targetPath, 'CHANGELOG.md'))
   fse.removeSync(path.join(targetPath, 'node_modules'))

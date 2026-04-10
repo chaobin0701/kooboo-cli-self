@@ -85,6 +85,8 @@ kb new <site-name> -h <host>
 
 Clone a remote Kooboo site.
 
+> `kb clone` 会在初始化时提示是否生成 `AGENTS.md`，建议保持开启，方便后续 Codex 等工具直接接手。
+
 ```sh
 # Clone a site (full command)
 kooboo-cli clone <siteUrl>
