@@ -5,6 +5,7 @@ import { auth, AuthConfig, site } from '@kooboo/core'
 import { confirm } from '@inquirer/prompts'
 import fse from 'fs-extra'
 import path from 'path'
+import { retryWithLimit } from '../utils/retry'
 
 interface CreateOptions {
   host?: string
@@ -20,30 +21,44 @@ export async function createAction(siteName: string, options: CreateOptions) {
     username: '',
     password: ''
   }
-  // 循环输入用户名和密码，直到认证成功
-  while (true) {
-    const { username, password } = await enterUsernameAndPassword()
-    const identifyUserSpinner = ora('Identify user...').start()
-    try {
+  const { username, password } = await enterUsernameAndPassword()
+  const loginResult = await retryWithLimit(
+    async () => {
       if (host) {
-        authConfig.token = await auth.loginByServer(host, {
+        return await auth.loginByServer(host, {
           username,
           password
         })
-      } else {
-        const { token, serverUrl } = await auth.loginByServerAndGetServerUrl({
-          username,
-          password
-        })
-        authConfig.token = token
-        authConfig.serverUrl = serverUrl
       }
-      identifyUserSpinner.succeed(`Identify user ${username} success!`)
-      // 认证成功后，退出循环
-      break
-    } catch (error) {
-      identifyUserSpinner.fail('Identify user failed!')
+
+      return await auth.loginByServerAndGetServerUrl({
+        username,
+        password
+      })
+    },
+    {
+      attempts: 3,
+      message: 'Identify user...',
+      successMessage: (result) => {
+        if (typeof result === 'string') {
+          authConfig.token = result
+          return `Identify user ${username} success!`
+        }
+
+        authConfig.token = result.token
+        authConfig.serverUrl = result.serverUrl
+        return `Identify user ${username} success!`
+      },
+      failureMessage: (_attempt, attempts) =>
+        `Identify user failed! (${_attempt}/${attempts})`,
+      finalFailureMessage: (attempts) =>
+        `Identify user failed after ${attempts} attempts, stop retrying.`
     }
+  )
+
+  if (!loginResult) {
+    process.exitCode = 1
+    return
   }
 
   // 创建站点

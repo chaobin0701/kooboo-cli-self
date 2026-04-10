@@ -86,6 +86,8 @@ kbs new <site-name> -h <host>
 Clone a remote Kooboo site.
 
 > `kbs clone` 会在初始化时提示是否生成 `AGENTS.md`，建议保持开启，方便后续 Codex 等工具直接接手。
+>
+> 如果用户名或密码不正确，登录最多重试 3 次，之后会停止，避免重复请求。
 
 ```sh
 # Clone a site (full command)

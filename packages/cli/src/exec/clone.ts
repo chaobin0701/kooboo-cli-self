@@ -9,6 +9,7 @@ import {
   writeProjectScaffold,
   writeKoobooDefinitions
 } from '../utils/writeFile.js'
+import { retryWithLimit } from '../utils/retry.js'
 import path from 'path'
 
 export type CloneActionOptions = {
@@ -62,24 +63,36 @@ export async function cloneAction(options: CloneActionOptions) {
   }
   const answers = await inquirer.prompt(questions)
 
-  while (true) {
-    const username = answers.username || process.env.KOOBOO_USERNAME
-    const password = answers.password || process.env.KOOBOO_PASSWORD
-
-    const identifyUserSpinner = ora('Authenticating user...').start()
-    try {
-      const token = await auth.loginBySite(siteUrl, { username, password })
-      authConfig = {
-        ...authConfig,
-        username,
-        password,
-        token
-      }
-      identifyUserSpinner.succeed(`User ${username} authenticated successfully!`)
-      break
-    } catch (error) {
-      identifyUserSpinner.fail(`Failed to authenticate user ${username}!`)
+  const username = answers.username || process.env.KOOBOO_USERNAME
+  const password = answers.password || process.env.KOOBOO_PASSWORD
+  if (!username || !password) {
+    ora('Username and password are required').fail()
+    process.exitCode = 1
+    return
+  }
+  const token = await retryWithLimit(
+    () => auth.loginBySite(siteUrl, { username, password }),
+    {
+      attempts: 3,
+      message: 'Authenticating user...',
+      successMessage: () => `User ${username} authenticated successfully!`,
+      failureMessage: (attempt, attempts) =>
+        `Failed to authenticate user ${username}! (${attempt}/${attempts})`,
+      finalFailureMessage: (attempts) =>
+        `Failed to authenticate user ${username} after ${attempts} attempts, stop retrying.`
     }
+  )
+
+  if (!token) {
+    process.exitCode = 1
+    return
+  }
+
+  authConfig = {
+    ...authConfig,
+    username,
+    password,
+    token
   }
 
   let siteName = ''
