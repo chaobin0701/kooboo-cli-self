@@ -1,11 +1,45 @@
 import { checkConfigKey, getConfig, setConfig } from '../utils/config.js'
 import type { KoobooCliConfig } from '../utils/config.js'
 import ora from 'ora'
+import {
+  pullSiteConfigAction,
+  pushSiteConfigAction,
+  showSiteConfigAction
+} from './siteConfig.js'
+
+export type ConfigActionOptions = {
+  global?: true
+  siteUrl?: string
+  username?: string
+  password?: string
+}
+
 export async function configAction(
-  key?: keyof KoobooCliConfig,
+  key?: keyof KoobooCliConfig | 'site',
   value?: string,
-  options?: { global?: true }
+  options?: ConfigActionOptions
 ) {
+  if (key === 'site') {
+    if (!value) {
+      ora('Usage: kbs config site <pull|push|show>').fail()
+      return
+    }
+    if (value === 'pull') {
+      await pullSiteConfigAction(options)
+      return
+    }
+    if (value === 'push') {
+      await pushSiteConfigAction(options)
+      return
+    }
+    if (value === 'show') {
+      await showSiteConfigAction()
+      return
+    }
+    ora(`Unknown site config command: ${value}`).fail()
+    return
+  }
+
   const target = !!options?.global ? 'global' : 'project'
 
   if (!key) {

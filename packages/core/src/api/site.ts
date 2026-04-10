@@ -130,12 +130,46 @@ export async function getSite() {
   const {
     data: { site }
   } = await client.get<{ site: Site }>('/Site/Get')
+  koobooContext.setConfig({
+    siteId: site.id
+  })
   return site
 }
 
 export async function updateSite(site: Partial<Site>) {
   const client = getClient(ClientType.SITE)
   await client.post('/Site/post', site)
+}
+
+function resolveSiteId(siteId?: string) {
+  const resolvedSiteId = siteId || koobooContext.getConfig().siteId
+  if (!resolvedSiteId) {
+    throw new Error('SiteId is required')
+  }
+  return resolvedSiteId
+}
+
+export async function getSiteConfig(siteId?: string) {
+  const client = getClient(ClientType.SITE)
+  const resolvedSiteId = resolveSiteId(siteId)
+  const {
+    data: { site }
+  } = await client.get<{ site: Site }>('/Site/Get', {
+    params: {
+      SiteId: resolvedSiteId
+    }
+  })
+  return site
+}
+
+export async function updateSiteConfig(siteConfig: Site, siteId?: string) {
+  const client = getClient(ClientType.SITE)
+  const resolvedSiteId = resolveSiteId(siteId || siteConfig.id)
+  await client.post('/Site/post', siteConfig, {
+    params: {
+      SiteId: resolvedSiteId
+    }
+  })
 }
 
 export async function getTypes() {

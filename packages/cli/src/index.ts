@@ -53,12 +53,24 @@ program
 //   `Schematics available for generate command: \n${getResourcesTable()}`
 // )
 
-program
+const configCommand = program
   .command('config')
   .arguments('[key] [value]')
   .description('Set or get configuration values')
   .option('-g, --global', 'Set configuration value globally')
+  .option('-s, --site-url <url>', 'Specify the Kooboo site URL for site config commands')
+  .option('-u, --username <username>', 'Specify the Kooboo username for site config commands')
+  .option('-p, --password <password>', 'Specify the Kooboo password for site config commands')
   .action(configAction)
+  .addHelpText(
+    'after',
+    `
+Site config commands:
+  kbs config site pull
+  kbs config site push
+  kbs config site show
+`
+  )
 
 // create
 program

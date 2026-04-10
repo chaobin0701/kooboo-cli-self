@@ -6,6 +6,7 @@ import { confirm } from '@inquirer/prompts'
 import fse from 'fs-extra'
 import path from 'path'
 import { retryWithLimit } from '../utils/retry'
+import { writeSiteConfig } from '../utils/siteConfig'
 
 interface CreateOptions {
   host?: string
@@ -91,6 +92,13 @@ export async function createAction(siteName: string, options: CreateOptions) {
   }
 
   await writeProjectScaffold({ targetPath, siteName, authConfig })
+
+  try {
+    const remoteSiteConfig = await site.getSiteConfig(authConfig.siteId)
+    writeSiteConfig(remoteSiteConfig, targetPath)
+  } catch (error) {
+    ora(`Failed to write site config: ${error}`).fail()
+  }
 
   try {
     const dts = await site.getTypes()

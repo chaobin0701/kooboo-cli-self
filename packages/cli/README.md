@@ -65,6 +65,23 @@ kooboo-cli config <key> <value> --global
 kbs config <key> <value> -g
 ```
 
+### config site
+
+Manage the standalone `siteConfig` JSON stored at `.kooboo-cli/siteConfig.json`.
+
+```sh
+# Pull remote siteConfig into local JSON
+kbs config site pull -s <url> -u <username> -p <password>
+
+# Push local siteConfig JSON back to remote
+kbs config site push -s <url> -u <username> -p <password>
+
+# Show local siteConfig JSON
+kbs config site show
+```
+
+> `kbs clone` 和 `kbs new` 会在初始化时自动拉取一次 `siteConfig.json`。
+
 ### new
 
 Create a new Kooboo site.

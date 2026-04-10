@@ -10,6 +10,7 @@ import {
   writeKoobooDefinitions
 } from '../utils/writeFile.js'
 import { retryWithLimit } from '../utils/retry.js'
+import { writeSiteConfig } from '../utils/siteConfig.js'
 import path from 'path'
 
 export type CloneActionOptions = {
@@ -113,6 +114,13 @@ export async function cloneAction(options: CloneActionOptions) {
     authConfig,
     includeAgentsMd: options.includeAgentsMd ?? answers.includeAgentsMd ?? false
   })
+
+  try {
+    const remoteSiteConfig = await site.getSiteConfig(authConfig.siteId)
+    writeSiteConfig(remoteSiteConfig, targetPath)
+  } catch (error) {
+    ora(`Failed to write site config: ${error}`).fail()
+  }
 
   async function cloneAllResource() {
     const resourceList = await resource.loadResourceList()
