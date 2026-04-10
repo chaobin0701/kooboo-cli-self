@@ -1,10 +1,10 @@
-import { enterSiteName, enterUsernameAndPassword, selectProjectTemplate } from '../utils/enter'
-import { writeTemplateProject } from '../utils/writeFile'
+import { enterSiteName, enterUsernameAndPassword } from '../utils/enter'
+import { writeProjectScaffold, writeKoobooDefinitions } from '../utils/writeFile'
 import ora from 'ora'
 import { auth, AuthConfig, site } from '@kooboo/core'
 import { confirm } from '@inquirer/prompts'
-import path from 'path'
 import fse from 'fs-extra'
+import path from 'path'
 
 interface CreateOptions {
   host?: string
@@ -62,9 +62,6 @@ export async function createAction(siteName: string, options: CreateOptions) {
     return process.exit(1)
   }
 
-  // 选择模板项目
-  const template = await selectProjectTemplate()
-
   const targetPath = path.join(process.cwd(), siteName)
 
   if (fse.existsSync(targetPath)) {
@@ -78,5 +75,12 @@ export async function createAction(siteName: string, options: CreateOptions) {
     }
   }
 
-  await writeTemplateProject({ targetPath, template, siteName, authConfig })
+  await writeProjectScaffold({ targetPath, siteName, authConfig })
+
+  try {
+    const dts = await site.getTypes()
+    await writeKoobooDefinitions(dts, targetPath)
+  } catch (error) {
+    ora('Failed to write kooboo type definitions').fail()
+  }
 }

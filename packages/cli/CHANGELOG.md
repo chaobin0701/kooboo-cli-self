@@ -354,7 +354,7 @@
 
 ### Minor Changes
 
-- sync 包、template-default 包
+- sync 包
 
 ### Patch Changes
 

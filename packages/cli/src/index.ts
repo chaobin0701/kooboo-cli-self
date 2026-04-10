@@ -15,6 +15,7 @@ import { cloneAction } from './exec/clone'
 import { syncAction } from './exec/sync'
 import { pullAction } from './exec/pull'
 import { pushAction } from './exec/push'
+import { deployAction } from './exec/deploy'
 import { configAction } from './exec/config'
 import { exportAction } from './exec/export'
 import type { SyncActionOptions, ExportActionOptions } from './types'
@@ -75,14 +76,15 @@ program
   .description('Clone a remote Kooboo site')
   .argument('<siteUrl>', 'Specify the site url to clone')
   .argument('[dir]', 'Specify the target directory')
-  .option(
-    '-t, --template <templateName>',
-    'Specify the template name, supports "empty" and "vitest"'
-  )
   .option('-u, --username <username>', 'Specify the Kooboo username')
   .option('-p, --password <password>', 'Specify the Kooboo password')
   .action((siteUrl, dir, options) =>
-    cloneAction({ site: siteUrl, dir, template: options.template })
+    cloneAction({
+      site: siteUrl,
+      dir,
+      username: options.username,
+      password: options.password
+    })
   )
 
 // pull
@@ -101,6 +103,17 @@ program
   .argument('[name]', 'Specify the resource name to push')
   .action(pushAction)
   .addHelpText('after', `Resources available: \n${getResourcesTable()}`)
+
+program
+  .command('deploy')
+  .description('Deploy one or more local files to remote Kooboo site')
+  .argument('<files...>', 'Specify one or more local files to deploy')
+  .option('-s, --site-url <url>', 'Specify the Kooboo site URL')
+  .option('-u, --username <username>', 'Specify the Kooboo username')
+  .option('-p, --password <password>', 'Specify the Kooboo password')
+  .action((files, options) => {
+    deployAction(files, options)
+  })
 
 // generate
 program

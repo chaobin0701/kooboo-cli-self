@@ -32,6 +32,7 @@ kb <command> [options]
 | `clone`    | Clone a remote Kooboo site                    | `c`     |
 | `pull`     | Pull remote Kooboo site code to local         |         |
 | `push`     | Push local Kooboo site code to remote         |         |
+| `deploy`   | Deploy one or more local files to remote      |         |
 | `generate` | Generate Kooboo code resources                | `g`     |
 | `sync`     | Synchronize Kooboo site code to server        |         |
 | `export`   | Export Kooboo site resources to zip file      |         |
@@ -95,11 +96,6 @@ kooboo-cli clone <siteUrl> <dir>
 # Specify directory (shorthand command)
 kb clone <siteUrl> <dir>
 
-# Specify template (full parameter)
-kooboo-cli clone <siteUrl> <dir> --template <templateName>
-# Specify template (shorthand parameter)
-kb clone <siteUrl> <dir> -t <templateName>
-
 # Specify authentication (full parameter)
 kooboo-cli clone <siteUrl> <dir> --username <username> --password <password>
 # Specify authentication (shorthand parameter)
@@ -148,6 +144,20 @@ kooboo-cli push <resource> <name>
 kb push <resource> <name>
 ```
 
+### deploy
+
+Deploy one or more local files to the remote Kooboo site.
+
+```sh
+# Deploy a single file
+kooboo-cli deploy src/page/home.html
+kb deploy src/page/home.html
+
+# Deploy multiple files
+kooboo-cli deploy src/page/home.html src/view/common.html
+kb deploy src/page/home.html src/view/common.html
+```
+
 ### generate
 
 Generate Kooboo code resources.
@@ -160,6 +170,8 @@ kb generate <resource> <name>
 # Generate a resource (shorthand command with alias)
 kb g <resource> <name>
 ```
+
+> 目前 `generate` 仍是占位命令，不会自动生成资源文件。
 
 ### sync
 

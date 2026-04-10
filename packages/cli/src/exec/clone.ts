@@ -2,12 +2,11 @@ import { auth, site, resource } from '@kooboo/core'
 import type { AuthConfig, ResourceType } from '@kooboo/core'
 import ora from 'ora'
 import inquirer, { type DistinctQuestion } from 'inquirer'
-import { installUnitTesting } from '../utils/vitest'
 import {
   writeModuleResource,
   writeModuleTSConfigJson,
   writeResource,
-  writeTemplateProject,
+  writeProjectScaffold,
   writeKoobooDefinitions
 } from '../utils/writeFile.js'
 import path from 'path'
@@ -15,14 +14,8 @@ import path from 'path'
 export type CloneActionOptions = {
   site: string
   dir?: string
-  template?: 'vitest' | 'empty'
   username?: string
   password?: string
-}
-
-const templates: Record<string, string> = {
-  vitest: '@kooboo/template-vitest',
-  empty: '@kooboo/template-empty'
 }
 
 export async function cloneAction(options: CloneActionOptions) {
@@ -58,20 +51,6 @@ export async function cloneAction(options: CloneActionOptions) {
       default: ''
     })
   }
-  if (!options.template) {
-    questions.push({
-      type: 'checkbox',
-      name: 'features',
-      message: 'Select project features:',
-      choices: [{ name: 'Unit Testing', value: 'unit', checked: true }]
-    })
-  }
-  questions.push({
-    type: 'list',
-    name: 'packageManager',
-    message: 'Select package manager:',
-    choices: ['pnpm', 'yarn', 'npm']
-  })
   const answers = await inquirer.prompt(questions)
 
   while (true) {
@@ -106,20 +85,11 @@ export async function cloneAction(options: CloneActionOptions) {
 
   // Create local project
   const targetPath = path.join(process.cwd(), answers.dir || options.dir || siteName)
-  const template = templates[options.template || 'empty'] || options.template || templates['empty']
-  await writeTemplateProject({
+  await writeProjectScaffold({
     targetPath,
-    template,
     siteName,
     authConfig
   })
-
-  if (!options.template || options.template === 'empty') {
-    // check features
-    if (answers.features.includes('unit')) {
-      await installUnitTesting(targetPath, answers.packageManager || 'npm')
-    }
-  }
 
   async function cloneAllResource() {
     const resourceList = await resource.loadResourceList()

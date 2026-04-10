@@ -1,10 +1,9 @@
 import type { AuthConfig, Resource, ResourceType } from '@kooboo/core'
 import { compileCode, compileHtml } from '@kooboo/compile'
-import { NpmPackage } from '@kooboo/utils'
 import fse from 'fs-extra'
 import ora from 'ora'
-import os from 'node:os'
 import path from 'node:path'
+import os from 'node:os'
 import ejs from 'ejs'
 import { glob } from 'glob'
 import { ModuleResourceType } from '@kooboo/core'
@@ -34,56 +33,44 @@ const moduleResourceTypeDirMap = {
   backend: 'backend'
 }
 
-export async function writeTemplateProject({
+const scaffoldDirs = ['api', 'code', 'layout', 'page', 'pagescript', 'view', 'js', 'css', 'module']
+
+export async function writeProjectScaffold({
   targetPath,
-  template,
   siteName,
   authConfig
 }: {
   targetPath: string
-  template: string
   siteName: string
   authConfig: AuthConfig
 }) {
-  const pkg = new NpmPackage({
-    name: template,
-    targetPath: path.join(os.homedir(), '.kooboo-template')
-  })
-
-  if (!(await pkg.exists())) {
-    const downloadTemplateSpinner = ora('Downloading template...').start()
-    await pkg.install()
-    downloadTemplateSpinner.stop()
-  } else {
-    const updateTemplateSpinner = ora('Updating template...').start()
-    await pkg.update()
-    updateTemplateSpinner.stop()
-  }
   const createProjectSpinner = ora('Creating project...').start()
-  const templatePath = pkg.npmFilePath
-  fse.copySync(templatePath, targetPath)
+  fse.ensureDirSync(targetPath)
 
-  // 处理 package.json
   const packageJsonPath = path.join(targetPath, 'package.json')
-  if (fse.existsSync(packageJsonPath)) {
-    const packageJson = fse.readJsonSync(packageJsonPath)
-
-    // 修改必要的字段
-    packageJson.name = siteName
-    packageJson.version = '1.0.0'
-
-    // 删除不必要的字段
-    delete packageJson.publishConfig
-    delete packageJson.__npminstall_done
-    delete packageJson._from
-    delete packageJson._resolved
-
-    // 写回文件
-    fse.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 })
-  }
+  fse.writeJsonSync(
+    packageJsonPath,
+    {
+      name: siteName,
+      version: '1.0.0',
+      private: true,
+      type: 'module',
+      scripts: {
+        dev: 'kb sync'
+      }
+    },
+    { spaces: 2 }
+  )
 
   // write .gitignore
   fse.writeFileSync(path.join(targetPath, '.gitignore'), gitignore)
+
+  // prepare empty resource folders
+  for (const dir of scaffoldDirs) {
+    const dirPath = path.join(targetPath, 'src', dir)
+    fse.ensureDirSync(dirPath)
+    fse.writeFileSync(path.join(dirPath, '.gitkeep'), '')
+  }
 
   // write .env, .env.example
   const env: Record<string, string | undefined> = {
@@ -122,6 +109,12 @@ async function writeDefaultEnvFiles(targetPath: string, env: Record<string, stri
   }
 
   upsertLine(path.join(targetPath, '.gitignore'), '.env', (line) => line?.trim() === '.env')
+
+  fse.writeFileSync(
+    path.join(targetPath, 'kooboo.d.ts'),
+    `declare const k: any
+`
+  )
 }
 
 export async function writeResource<T extends ResourceType>(
