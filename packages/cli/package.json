@@ -10,7 +10,7 @@
   "types": "dist/index.d.ts",
   "bin": {
     "kooboo-cli": "./dist/index.js",
-    "kb": "./dist/index.js"
+    "kbs": "./dist/index.js"
   },
   "scripts": {
     "build": "tsup"

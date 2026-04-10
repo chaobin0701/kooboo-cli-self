@@ -29,14 +29,16 @@ pnpm link -g
 常用命令：
 
 ```bash
-kb new [site-name]
-kb clone <site-url> [dir]
-kb pull [resource] [name]
-kb push [resource] [name]
-kb deploy <files...>
-kb sync
-kb export
+kbs new [site-name]
+kbs clone <site-url> [dir]
+kbs pull [resource] [name]
+kbs push [resource] [name]
+kbs deploy <files...>
+kbs sync
+kbs export
 ```
+
+`kbs clone` 在初始化时会提示是否生成 `AGENTS.md`，建议保持开启，方便后续 Codex 等编程工具直接接手。
 
 命令分工：
 

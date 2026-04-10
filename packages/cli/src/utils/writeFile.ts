@@ -59,7 +59,7 @@ export async function writeProjectScaffold({
       private: true,
       type: 'module',
       scripts: {
-        dev: 'kb sync'
+        dev: 'kbs sync'
       }
     },
     { spaces: 2 }

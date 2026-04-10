@@ -1,6 +1,6 @@
 # Kooboo CLI
 
-> Command alias: `kb` - You can use `kb` instead of `kooboo-cli` as the prefix for all commands
+> Command alias: `kbs` - You can use `kbs` instead of `kooboo-cli` as the prefix for all commands
 
 Kooboo CLI is a command-line tool for Kooboo local development.
 
@@ -22,7 +22,7 @@ yarn global add @kooboo/cli
 ```sh
 kooboo-cli <command> [options]
 # or use the shorthand form
-kb <command> [options]
+kbs <command> [options]
 ```
 
 | Command    | Description                                   | Aliases |
@@ -47,22 +47,22 @@ Set or get configuration values.
 # Get all configs (full command)
 kooboo-cli config
 # Get all configs (shorthand command)
-kb config
+kbs config
 
 # Get a specific config (full command)
 kooboo-cli config <key>
 # Get a specific config (shorthand command)
-kb config <key>
+kbs config <key>
 
 # Set a config (full command)
 kooboo-cli config <key> <value>
 # Set a config (shorthand command)
-kb config <key> <value>
+kbs config <key> <value>
 
 # Set a global config (full parameter)
 kooboo-cli config <key> <value> --global
 # Set a global config (shorthand parameter)
-kb config <key> <value> -g
+kbs config <key> <value> -g
 ```
 
 ### new
@@ -73,35 +73,35 @@ Create a new Kooboo site.
 # Create a new site (full command)
 kooboo-cli new <site-name>
 # Create a new site (shorthand command)
-kb new <site-name>
+kbs new <site-name>
 
 # Specify host (full parameter)
 kooboo-cli new <site-name> --host <host>
 # Specify host (shorthand parameter)
-kb new <site-name> -h <host>
+kbs new <site-name> -h <host>
 ```
 
 ### clone
 
 Clone a remote Kooboo site.
 
-> `kb clone` 会在初始化时提示是否生成 `AGENTS.md`，建议保持开启，方便后续 Codex 等工具直接接手。
+> `kbs clone` 会在初始化时提示是否生成 `AGENTS.md`，建议保持开启，方便后续 Codex 等工具直接接手。
 
 ```sh
 # Clone a site (full command)
 kooboo-cli clone <siteUrl>
 # Clone a site (shorthand command)
-kb clone <siteUrl>
+kbs clone <siteUrl>
 
 # Specify directory (full command)
 kooboo-cli clone <siteUrl> <dir>
 # Specify directory (shorthand command)
-kb clone <siteUrl> <dir>
+kbs clone <siteUrl> <dir>
 
 # Specify authentication (full parameter)
 kooboo-cli clone <siteUrl> <dir> --username <username> --password <password>
 # Specify authentication (shorthand parameter)
-kb clone <siteUrl> <dir> -u <username> -p <password>
+kbs clone <siteUrl> <dir> -u <username> -p <password>
 ```
 
 ### pull
@@ -112,17 +112,17 @@ Pull remote Kooboo site code to local environment.
 # Pull all resources (full command)
 kooboo-cli pull
 # Pull all resources (shorthand command)
-kb pull
+kbs pull
 
 # Pull a specific resource type (full command)
 kooboo-cli pull <resource>
 # Pull a specific resource type (shorthand command)
-kb pull <resource>
+kbs pull <resource>
 
 # Pull a specific resource by name (full command)
 kooboo-cli pull <resource> <name>
 # Pull a specific resource by name (shorthand command)
-kb pull <resource> <name>
+kbs pull <resource> <name>
 ```
 
 ### push
@@ -133,17 +133,17 @@ Push local Kooboo site code to remote environment. Use this for batch publishing
 # Push all changes (full command)
 kooboo-cli push
 # Push all changes (shorthand command)
-kb push
+kbs push
 
 # Push a specific resource type (full command)
 kooboo-cli push <resource>
 # Push a specific resource type (shorthand command)
-kb push <resource>
+kbs push <resource>
 
 # Push a specific resource by name (full command)
 kooboo-cli push <resource> <name>
 # Push a specific resource by name (shorthand command)
-kb push <resource> <name>
+kbs push <resource> <name>
 ```
 
 ### deploy
@@ -153,19 +153,19 @@ Deploy files, folders, or glob patterns to the remote Kooboo site. Use this for 
 ```sh
 # Deploy a single file
 kooboo-cli deploy src/page/home.html
-kb deploy src/page/home.html
+kbs deploy src/page/home.html
 
 # Deploy multiple files
 kooboo-cli deploy src/page/home.html src/view/common.html
-kb deploy src/page/home.html src/view/common.html
+kbs deploy src/page/home.html src/view/common.html
 
 # Deploy a folder
 kooboo-cli deploy src/view
-kb deploy src/view
+kbs deploy src/view
 
 # Deploy a glob
 kooboo-cli deploy "src/page/*.html"
-kb deploy "src/page/*.html"
+kbs deploy "src/page/*.html"
 ```
 
 ### generate
@@ -176,9 +176,9 @@ Generate Kooboo code resources.
 # Generate a resource (full command)
 kooboo-cli generate <resource> <name>
 # Generate a resource (shorthand command)
-kb generate <resource> <name>
+kbs generate <resource> <name>
 # Generate a resource (shorthand command with alias)
-kb g <resource> <name>
+kbs g <resource> <name>
 ```
 
 > 目前 `generate` 仍是占位命令，不会自动生成资源文件。
@@ -191,22 +191,22 @@ Synchronize Kooboo site code to server environment.
 # Sync changes (full command)
 kooboo-cli sync
 # Sync changes (shorthand command)
-kb sync
+kbs sync
 
 # Initialize synchronization (full parameter)
 kooboo-cli sync --init
 # Initialize synchronization (shorthand parameter)
-kb sync -i
+kbs sync -i
 
 # Specify site information (full parameter)
 kooboo-cli sync --site-url <url> --username <username> --password <password>
 # Specify site information (shorthand parameter)
-kb sync -s <url> -u <username> -p <password>
+kbs sync -s <url> -u <username> -p <password>
 
 # Specify common module path (full parameter)
 kooboo-cli sync --common-module-path <path>
 # Specify common module path (shorthand parameter)
-kb sync -c <path>
+kbs sync -c <path>
 ```
 
 ### export
@@ -217,5 +217,5 @@ Export Kooboo site resources to zip file.
 # Export site resources (full command and parameters)
 kooboo-cli export --site-url <url> --username <username> --password <password> --file <file>
 # Export site resources (shorthand command and parameters)
-kb export -s <url> -u <username> -p <password> -f <file>
+kbs export -s <url> -u <username> -p <password> -f <file>
 ```

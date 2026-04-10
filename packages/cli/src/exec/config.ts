@@ -12,7 +12,7 @@ export async function configAction(
     const config = getConfig(target)
     if (!config) {
       ora(
-        `No config found for ${target}, please run 'kb config ${key} <value>' to set config`
+        `No config found for ${target}, please run 'kbs config ${key} <value>' to set config`
       ).fail()
       return
     }
@@ -29,7 +29,7 @@ export async function configAction(
     const config = getConfig(target)
     if (!config) {
       ora(
-        `No config found for ${target}, please run 'kb config ${key} <value>' to set config`
+        `No config found for ${target}, please run 'kbs config ${key} <value>' to set config`
       ).fail()
       return
     }
