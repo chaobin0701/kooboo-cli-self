@@ -1,21 +1,20 @@
-import fs from 'node:fs'
-import path from 'node:path'
 import ora from 'ora'
 import { auth, resource } from '@kooboo/core'
 import { getUserNameAndPassword } from '../utils/config.js'
-import { execPush } from '@kooboo/sync'
+import { deployFiles, resolveDeploymentTargets } from '@kooboo/sync'
 
 export async function deployAction(
   files: string[],
   options: { siteUrl?: string; username?: string; password?: string } = {}
 ) {
   const siteUrl = options.siteUrl || process.env.KOOBOO_SITE_URL
-  const userInfo =
-    options.username && options.password
-      ? { username: options.username, password: options.password }
-      : getUserNameAndPassword()
+  const envUserInfo = getUserNameAndPassword()
+  const userInfo = {
+    username: options.username || envUserInfo?.username || '',
+    password: options.password || envUserInfo?.password || ''
+  }
 
-  if (!siteUrl || !userInfo) {
+  if (!siteUrl || !userInfo.username || !userInfo.password) {
     ora('KOOBOO_SITE_URL, KOOBOO_USERNAME, KOOBOO_PASSWORD is required').fail()
     return
   }
@@ -32,19 +31,21 @@ export async function deployAction(
 
   await resource.loadResourceList()
 
-  const absFiles = files.map((file) => path.resolve(process.cwd(), file))
-  const missing = absFiles.filter((file) => !fs.existsSync(file))
-  if (missing.length) {
-    ora(`File not found: ${missing.join(', ')}`).fail()
+  const resolution = await resolveDeploymentTargets(files)
+  if (resolution.missing.length) {
+    ora(`File not found: ${resolution.missing.join(', ')}`).fail()
+    process.exitCode = 1
+    return
+  }
+  if (resolution.empty.length) {
+    ora(`No deployable files found for: ${resolution.empty.join(', ')}`).fail()
     process.exitCode = 1
     return
   }
 
-  const spinner = ora(`Deploying ${absFiles.length} file(s)...`).start()
+  const spinner = ora(`Deploying ${resolution.files.length} file(s)...`).start()
   try {
-    for (const filePath of absFiles) {
-      await execPush(filePath)
-    }
+    await deployFiles(resolution.files)
     spinner.succeed('Deploy success!')
   } catch (error) {
     spinner.fail(`Deploy failed: ${error}`)

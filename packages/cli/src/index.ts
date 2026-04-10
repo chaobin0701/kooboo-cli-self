@@ -98,7 +98,7 @@ program
 
 program
   .command('push')
-  .description('Push local Kooboo site code to remote environment')
+  .description('Push local Kooboo site code to remote environment in batch')
   .argument('[resource]', 'Specify the resource type to push')
   .argument('[name]', 'Specify the resource name to push')
   .action(pushAction)
@@ -106,7 +106,7 @@ program
 
 program
   .command('deploy')
-  .description('Deploy one or more local files to remote Kooboo site')
+  .description('Deploy files, folders, or globs to remote Kooboo site')
   .argument('<files...>', 'Specify one or more local files to deploy')
   .option('-s, --site-url <url>', 'Specify the Kooboo site URL')
   .option('-u, --username <username>', 'Specify the Kooboo username')
@@ -119,7 +119,7 @@ program
 program
   .command('generate')
   .alias('g')
-  .description('Generate Kooboo code resources')
+  .description('Generate Kooboo code resources placeholder')
   .arguments('<resource> <name> [options]')
   .action(generateAction)
   .addHelpText('after', `Resources available: \n${getResourcesTable()}`)
@@ -127,7 +127,7 @@ program
 // sync
 program
   .command('sync')
-  .description('Synchronize Kooboo site code to server environment')
+  .description('Continuously synchronize Kooboo site code to server environment')
   .option('-s, --site-url <url>', 'Specify the Kooboo site URL')
   .option('-u, --username <username>', 'Specify the Kooboo username')
   .option('-p, --password <password>', 'Specify the Kooboo password')

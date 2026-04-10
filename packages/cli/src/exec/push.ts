@@ -2,7 +2,7 @@ import { checkResource, type ResourceType } from '../utils/resources.js'
 import ora from 'ora'
 import { auth, resource } from '@kooboo/core'
 import { getUserNameAndPassword } from '../utils/config.js'
-import { watchSiteResourcePaths, watchModuleResourcePaths, execPush } from '@kooboo/sync'
+import { watchSiteResourcePaths, watchModuleResourcePaths, deployFiles } from '@kooboo/sync'
 import { glob } from 'glob'
 import { minimatch } from 'minimatch'
 import path from 'node:path'
@@ -100,11 +100,13 @@ export async function pushAction(resourceType?: ResourceType, name?: string) {
     nodir: true
   })
 
-  await Promise.all(
-    files
-      .filter((file) => !resourceType || matchesPushTarget(file, resourceType, name))
-      .map(async (file) => execPush(file))
-  )
-
-  ora('Push success!').succeed()
+  const filteredFiles = files.filter((file) => !resourceType || matchesPushTarget(file, resourceType, name))
+  const spinner = ora(`Pushing ${filteredFiles.length} file(s)...`).start()
+  try {
+    await deployFiles(filteredFiles)
+    spinner.succeed('Push success!')
+  } catch (error) {
+    spinner.fail(`Push failed: ${error}`)
+    process.exitCode = 1
+  }
 }

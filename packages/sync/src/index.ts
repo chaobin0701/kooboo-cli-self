@@ -9,8 +9,9 @@ import ora from 'ora'
 import { getSrcDir } from './utils.js'
 import { handleFileChange, handleFileDelete } from './handle.js'
 import { watchSiteResourcePaths, watchModuleResourcePaths } from './config.js'
+import { deployFiles, resolveDeploymentTargets } from './deploy.js'
 
-export { watchSiteResourcePaths, watchModuleResourcePaths }
+export { watchSiteResourcePaths, watchModuleResourcePaths, deployFiles, resolveDeploymentTargets }
 
 interface SyncOptions {
   siteUrl: string
@@ -166,6 +167,5 @@ export async function execPush(filePath: string) {
   if (isLocked()) {
     return
   }
-  const resourceInfo = getResourceInfo(filePath)
-  await handleFileChange(filePath, resourceInfo, getResourceContent(filePath))
+  await deployFiles([filePath])
 }

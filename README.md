@@ -33,9 +33,21 @@ kb new [site-name]
 kb clone <site-url> [dir]
 kb pull [resource] [name]
 kb push [resource] [name]
+kb deploy <files...>
 kb sync
 kb export
 ```
+
+命令分工：
+
+- `sync`：自动监听并持续同步
+- `push`：批量推送当前工作区资源
+- `deploy`：手动指定文件、目录或通配符，精准部署到远程站点
+
+目录语义：
+
+- `src/api`、`src/code`、`src/layout`、`src/page`、`src/view`、`src/js`、`src/css`、`src/module` 都有对应的 Kooboo 资源含义
+- 文件名和目录会一起决定远端资源名，不要把它当作普通前端项目目录来理解
 
 ## 维护
 

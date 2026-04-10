@@ -32,7 +32,7 @@ kb <command> [options]
 | `clone`    | Clone a remote Kooboo site                    | `c`     |
 | `pull`     | Pull remote Kooboo site code to local         |         |
 | `push`     | Push local Kooboo site code to remote         |         |
-| `deploy`   | Deploy one or more local files to remote      |         |
+| `deploy`   | Deploy files, folders, or globs to remote     |         |
 | `generate` | Generate Kooboo code resources                | `g`     |
 | `sync`     | Synchronize Kooboo site code to server        |         |
 | `export`   | Export Kooboo site resources to zip file      |         |
@@ -125,7 +125,7 @@ kb pull <resource> <name>
 
 ### push
 
-Push local Kooboo site code to remote environment.
+Push local Kooboo site code to remote environment. Use this for batch publishing the current workspace.
 
 ```sh
 # Push all changes (full command)
@@ -146,7 +146,7 @@ kb push <resource> <name>
 
 ### deploy
 
-Deploy one or more local files to the remote Kooboo site.
+Deploy files, folders, or glob patterns to the remote Kooboo site. Use this for precise manual publishing.
 
 ```sh
 # Deploy a single file
@@ -156,6 +156,14 @@ kb deploy src/page/home.html
 # Deploy multiple files
 kooboo-cli deploy src/page/home.html src/view/common.html
 kb deploy src/page/home.html src/view/common.html
+
+# Deploy a folder
+kooboo-cli deploy src/view
+kb deploy src/view
+
+# Deploy a glob
+kooboo-cli deploy "src/page/*.html"
+kb deploy "src/page/*.html"
 ```
 
 ### generate
