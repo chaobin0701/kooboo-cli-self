@@ -33,6 +33,7 @@ kbs <command> [options]
 | `pull`     | Pull remote Kooboo site code to local         |         |
 | `push`     | Push local Kooboo site code to remote         |         |
 | `deploy`   | Deploy files, folders, or globs to remote     |         |
+| `label`    | Manage Kooboo labels                          |         |
 | `generate` | Generate Kooboo code resources                | `g`     |
 | `sync`     | Synchronize Kooboo site code to server        |         |
 | `export`   | Export Kooboo site resources to zip file      |         |
@@ -81,6 +82,41 @@ kbs config site show
 ```
 
 > `kbs clone` 和 `kbs new` 会在初始化时自动拉取一次 `siteConfig.json`。
+
+### label
+
+Manage the standalone labels cache stored at `.kooboo-cli/labels.json`.
+
+```sh
+# Pull remote labels into local cache
+kbs label pull -s <url> -u <username> -p <password>
+
+# Show local labels cache
+kbs label show
+
+# Create or overwrite a single label
+kbs label set welcome --values '{"en":"Welcome","zh":"欢迎"}' -s <url> -u <username> -p <password>
+
+# Import labels from a JSON file
+kbs label import ./labels.json -s <url> -u <username> -p <password>
+```
+
+> `kbs clone` 和 `kbs new` 会在初始化时自动拉取一次 `labels.json`。
+>
+> `kbs label set` 直接发送完整 `values` JSON，不会自动拆分或改写语言字段。
+>
+> `kbs label import` 期望文件内容为语言到 key/value 的 JSON 映射，例如：
+>
+> ```json
+> {
+>   "en": {
+>     "a": "b"
+>   },
+>   "zh": {
+>     "a": "c"
+>   }
+> }
+> ```
 
 ### new
 

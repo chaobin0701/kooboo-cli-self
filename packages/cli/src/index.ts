@@ -17,6 +17,12 @@ import { pullAction } from './exec/pull'
 import { pushAction } from './exec/push'
 import { deployAction } from './exec/deploy'
 import { configAction } from './exec/config'
+import {
+  importLabelAction,
+  pullLabelAction,
+  setLabelAction,
+  showLabelAction
+} from './exec/label'
 import { exportAction } from './exec/export'
 import type { SyncActionOptions, ExportActionOptions } from './types'
 
@@ -71,6 +77,50 @@ Site config commands:
   kbs config site show
 `
   )
+
+const labelCommand = program
+  .command('label')
+  .description('Manage Kooboo labels')
+
+labelCommand
+  .command('pull')
+  .description('Pull remote labels to local cache')
+  .option('-s, --site-url <url>', 'Specify the Kooboo site URL')
+  .option('-u, --username <username>', 'Specify the Kooboo username')
+  .option('-p, --password <password>', 'Specify the Kooboo password')
+  .action((options) => {
+    return pullLabelAction(options)
+  })
+
+labelCommand
+  .command('show')
+  .description('Show local label cache')
+  .action(() => {
+    showLabelAction()
+  })
+
+labelCommand
+  .command('set')
+  .description('Create or overwrite a single label')
+  .argument('<key>', 'Specify the label key')
+  .option('-v, --values <json>', 'Specify multilingual values as a JSON string')
+  .option('-s, --site-url <url>', 'Specify the Kooboo site URL')
+  .option('-u, --username <username>', 'Specify the Kooboo username')
+  .option('-p, --password <password>', 'Specify the Kooboo password')
+  .action((key, options) => {
+    return setLabelAction(key, options)
+  })
+
+labelCommand
+  .command('import')
+  .description('Import labels from a JSON file')
+  .argument('<file>', 'Specify the label JSON file to import')
+  .option('-s, --site-url <url>', 'Specify the Kooboo site URL')
+  .option('-u, --username <username>', 'Specify the Kooboo username')
+  .option('-p, --password <password>', 'Specify the Kooboo password')
+  .action((file, options) => {
+    return importLabelAction(file, options)
+  })
 
 // create
 program

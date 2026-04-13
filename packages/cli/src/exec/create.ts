@@ -7,6 +7,7 @@ import fse from 'fs-extra'
 import path from 'path'
 import { retryWithLimit } from '../utils/retry'
 import { writeSiteConfig } from '../utils/siteConfig'
+import { autoPullLabels } from './label'
 
 interface CreateOptions {
   host?: string
@@ -99,6 +100,8 @@ export async function createAction(siteName: string, options: CreateOptions) {
   } catch (error) {
     ora(`Failed to write site config: ${error}`).fail()
   }
+
+  await autoPullLabels(targetPath, authConfig.siteId)
 
   try {
     const dts = await site.getTypes()

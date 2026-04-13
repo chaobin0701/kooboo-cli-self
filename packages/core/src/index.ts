@@ -1,6 +1,7 @@
 import { koobooContext } from './config/context.js'
 import { createSiteClient, createServerClient } from './http/client.js'
 import * as authApi from './api/auth.js'
+import * as labelApi from './api/label.js'
 import * as siteApi from './api/site.js'
 import * as resourceApi from './api/resource/index.js'
 import { AuthConfig } from './types/context.js'
@@ -55,6 +56,7 @@ export function updateConfig(updates: Partial<AuthConfig>): void {
 
 // 导出API
 export const auth = authApi
+export const label = labelApi
 export const site = siteApi
 export const resource = resourceApi
 // 导出类型

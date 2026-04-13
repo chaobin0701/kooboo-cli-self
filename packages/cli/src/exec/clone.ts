@@ -11,6 +11,7 @@ import {
 } from '../utils/writeFile.js'
 import { retryWithLimit } from '../utils/retry.js'
 import { writeSiteConfig } from '../utils/siteConfig.js'
+import { autoPullLabels } from './label.js'
 import path from 'path'
 
 export type CloneActionOptions = {
@@ -121,6 +122,8 @@ export async function cloneAction(options: CloneActionOptions) {
   } catch (error) {
     ora(`Failed to write site config: ${error}`).fail()
   }
+
+  await autoPullLabels(targetPath, authConfig.siteId)
 
   async function cloneAllResource() {
     const resourceList = await resource.loadResourceList()

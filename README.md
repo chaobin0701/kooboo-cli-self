@@ -34,18 +34,24 @@ kbs clone <site-url> [dir]
 kbs pull [resource] [name]
 kbs push [resource] [name]
 kbs deploy <files...>
+kbs label pull
+kbs label show
+kbs label set <key> --values '{"en":"Hello"}'
+kbs label import <file>
 kbs sync
 kbs export
 ```
 
 `kbs clone` 在初始化时会提示是否生成 `AGENTS.md`，建议保持开启，方便后续 Codex 等编程工具直接接手。
 `siteConfig` 会单独存放在 `.kooboo-cli/siteConfig.json`，可以用 `kbs config site pull|push|show` 独立管理。
+`labels` 会单独存放在 `.kooboo-cli/labels.json`，可以用 `kbs label pull|show|set|import` 独立管理。
 
 命令分工：
 
 - `sync`：自动监听并持续同步
 - `push`：批量推送当前工作区资源
 - `deploy`：手动指定文件、目录或通配符，精准部署到远程站点
+- `label`：独立管理站点多语言标签
 
 目录语义：
 
