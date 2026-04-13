@@ -44,7 +44,7 @@ kbs export
 
 `kbs clone` 在初始化时会提示是否生成 `AGENTS.md`，建议保持开启，方便后续 Codex 等编程工具直接接手。
 `siteConfig` 会单独存放在 `.kooboo-cli/siteConfig.json`，可以用 `kbs config site pull|push|show` 独立管理。
-`labels` 会单独存放在 `.kooboo-cli/labels.json`，可以用 `kbs label pull|show|set|import` 独立管理。
+`labels` 会单独存放在 `.kooboo-cli/labels.json`，raw 备份会放在 `.kooboo-cli/labels.raw.json`，可以用 `kbs label pull|show|set|import` 独立管理。
 
 命令分工：
 

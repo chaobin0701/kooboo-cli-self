@@ -86,6 +86,7 @@ kbs config site show
 ### label
 
 Manage the standalone labels cache stored at `.kooboo-cli/labels.json`.
+The raw backup is stored at `.kooboo-cli/labels.raw.json`.
 
 ```sh
 # Pull remote labels into local cache
@@ -101,11 +102,28 @@ kbs label set welcome --values '{"en":"Welcome","zh":"欢迎"}' -s <url> -u <use
 kbs label import ./labels.json -s <url> -u <username> -p <password>
 ```
 
-> `kbs clone` 和 `kbs new` 会在初始化时自动拉取一次 `labels.json`。
+> `kbs clone` 和 `kbs new` 会在初始化时自动拉取一次 `labels.json`，并同时保存一份 `labels.raw.json` 备份。
 >
 > `kbs label set` 直接发送完整 `values` JSON，不会自动拆分或改写语言字段。
 >
-> `kbs label import` 期望文件内容为语言到 key/value 的 JSON 映射，例如：
+> `kbs label pull` 输出的是可编辑格式：
+>
+> ```json
+> {
+>   "en": {
+>     "welcome": "Welcome"
+>   },
+>   "zh": {
+>     "welcome": "欢迎"
+>   }
+> }
+> ```
+>
+> 你可以直接编辑 `labels.json`，然后用 `kbs label import ./labels.json` 上传。
+>
+> `kbs label import` 只负责把你指定的 JSON 文件上传到远端，不会做缓存转换或额外处理。
+>
+> `kbs label import` 期望的 JSON 文件示例：
 >
 > ```json
 > {

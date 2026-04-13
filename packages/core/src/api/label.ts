@@ -66,20 +66,18 @@ export async function importLabelFile(
   const content =
     typeof fileContent === 'string' ? fileContent : JSON.stringify(fileContent, null, 2)
   const formData = new FormData()
-  formData.append('file', new Blob([content], { type: 'application/json' }), fileName)
-
-  const headers =
-    typeof (formData as FormData & { getHeaders?: () => Record<string, string> }).getHeaders ===
-    'function'
-      ? (formData as FormData & { getHeaders: () => Record<string, string> }).getHeaders()
-      : undefined
+  const file = new File([content], fileName, {
+    type: 'application/json'
+  })
+  formData.append('file', file)
 
   const { data } = await client.post('/Label/Import', formData, {
     params: {
       SiteId: resolvedSiteId
     },
-    headers
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
   return data
 }
-

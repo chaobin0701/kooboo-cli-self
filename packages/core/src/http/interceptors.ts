@@ -1,5 +1,5 @@
 // packages/core/http/interceptors.ts
-import { AxiosInstance, AxiosError, AxiosResponse } from 'axios'
+import { AxiosInstance, AxiosError } from 'axios'
 import { koobooContext } from '../config/context.js'
 
 export function setupInterceptors(client: AxiosInstance): void {
@@ -21,9 +21,8 @@ export function setupInterceptors(client: AxiosInstance): void {
   client.interceptors.response.use(
     response => response,
     async (error: AxiosError) => {
-      const originalRequest = error.config
       console.error(error.response?.data)
-      // return Promise.reject(error)
+      return Promise.reject(error)
     }
   )
 }

@@ -9,7 +9,12 @@ import {
   getSiteConfigSiteUrl,
   readSiteConfig
 } from '../utils/siteConfig.js'
-import { getLabelCachePath, readLabelCache, writeLabelCache } from '../utils/label.js'
+import {
+  getLabelCachePath,
+  getLabelRawCachePath,
+  readLabelCache,
+  writeLabelCaches
+} from '../utils/label.js'
 
 export type LabelActionOptions = {
   siteUrl?: string
@@ -47,7 +52,7 @@ async function resolveSiteId(localSiteConfig: ReturnType<typeof readSiteConfig>)
 
 async function pullRemoteLabels(projectPath: string, siteId: string) {
   const remoteLabels = await label.getLabelList(siteId)
-  writeLabelCache(remoteLabels, projectPath)
+  writeLabelCaches(remoteLabels, projectPath)
   return remoteLabels
 }
 
@@ -130,7 +135,9 @@ export async function pullLabelAction(options: LabelActionOptions = {}) {
   try {
     const siteId = await resolveSiteId(localSiteConfig)
     const labels = await pullRemoteLabels(projectPath, siteId)
-    spinner.succeed(`Labels saved to ${getLabelCachePath(projectPath)} (${labels.length} items)`)
+    spinner.succeed(
+      `Labels saved to ${getLabelCachePath(projectPath)} and ${getLabelRawCachePath(projectPath)} (${labels.length} items)`
+    )
   } catch (error) {
     spinner.fail(`Load labels failed: ${error}`)
     process.exitCode = 1
@@ -196,6 +203,12 @@ export async function importLabelAction(
   const siteUrl = getSiteConfigSiteUrl(options, localSiteConfig)
   const { username, password } = getSiteConfigCredentials(options)
 
+  if (!filePath) {
+    ora('Label JSON file is required').fail()
+    process.exitCode = 1
+    return
+  }
+
   if (!fs.existsSync(filePath)) {
     ora(`Label file not found: ${filePath}`).fail()
     process.exitCode = 1
@@ -218,8 +231,9 @@ export async function importLabelAction(
   try {
     const siteId = await resolveSiteId(localSiteConfig)
     const fileContent = await fs.readFile(filePath, 'utf8')
-    parseLabelImportPayload(fileContent)
-    await label.importLabelFile(fileContent, path.basename(filePath), siteId)
+    const importPayload = parseLabelImportPayload(fileContent)
+
+    await label.importLabelFile(importPayload, path.basename(filePath), siteId)
     try {
       const labels = await refreshLocalLabelCache(projectPath, siteId)
       spinner.succeed(`Labels imported successfully! (${labels.length} items cached)`)
@@ -237,7 +251,9 @@ export async function autoPullLabels(projectPath: string, siteId: string) {
   const spinner = ora('Loading labels...').start()
   try {
     const labels = await refreshLocalLabelCache(projectPath, siteId)
-    spinner.succeed(`Labels saved to ${getLabelCachePath(projectPath)} (${labels.length} items)`)
+    spinner.succeed(
+      `Labels saved to ${getLabelCachePath(projectPath)} and ${getLabelRawCachePath(projectPath)} (${labels.length} items)`
+    )
     return labels
   } catch (error) {
     spinner.warn(`Failed to sync labels: ${error}`)
