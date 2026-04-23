@@ -17,11 +17,12 @@
 3. [`packages/cli/src/exec/*`](/Users/a1234/Desktop/my-projects/kooboo-cli-self/packages/cli/src/exec)
 4. [`packages/sync/src/*`](/Users/a1234/Desktop/my-projects/kooboo-cli-self/packages/sync/src)
 5. [`packages/compile/src/*`](/Users/a1234/Desktop/my-projects/kooboo-cli-self/packages/compile/src)
-6. [`packages/types/KScript.d.ts`](/Users/a1234/Desktop/my-projects/kooboo-cli-self/packages/types/KScript.d.ts)
-7. 文档站：
+6. 文档站，按这个顺序读：
    - [开箱提示词](https://chaobin0701.github.io/kb-document/kooboo-remote/ai-prompts)
    - [AI 远程开发补充说明](https://chaobin0701.github.io/kb-document/kooboo-remote/ai-remote-dev-notes)
    - [目录与文件作用总览](https://chaobin0701.github.io/kb-document/kooboo-remote/file-structure-overview)
+
+如果需要确认类型、接口、字段或运行时能力，再去 [`packages/types/KScript.d.ts`](/Users/a1234/Desktop/my-projects/kooboo-cli-self/packages/types/KScript.d.ts) 里用关键词搜索，不要一开始通读整份文件。
 
 ## 修改原则
 
